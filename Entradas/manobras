@@ -1,0 +1,7 @@
+# manobra origem destino ** tempo gasto para passar em um semáforo
+M1 L21 L70 10
+M2 L32 L72 5
+M3 L10 L71 12
+M4 L50 L72 10
+M5 L42 L70 20
+M6 L90 L41 30
