@@ -49,7 +49,6 @@ def main():
 	ini = time()
 
 	solucao = construir_solucao(layoutPatio, Manobras, OrigemLoc, Matriz, horizonteTempo, menorTempoAresta, "1")
-	#solucao = busca_local(layoutPatio, solucao[0])
 
 	m_solucao = solucao[:]
 	
@@ -57,7 +56,6 @@ def main():
 	while time() - ini < 0.1:
 		Matriz = gerar_matriz_alocacao(list(layoutPatio.edges()), horizonteTempo, menorTempoAresta)
 		solucao = construir_solucao(layoutPatio, Manobras, OrigemLoc, Matriz, horizonteTempo, menorTempoAresta, str(i))
-		#solucao = busca_local(layoutPatio, solucao[0])
 		
 		i += 1
 		# if solucao[1] < m_solucao[1]:

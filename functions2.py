@@ -93,14 +93,12 @@ def preencher_matriz_aloc(nwxGrafo, dic_lstMatriz, strLocomotiva, lst_tupTrajeto
 
 
 				if (caminho[j], caminho[j + 1]) in dic_lstMatriz:
-					print(instante)
 					a = (caminho[j], caminho[j + 1])
 					while dic_lstMatriz[a][instante] == strLocomotiva:
 						instante += 1
 					dic_lstMatriz[a][instante] = strLocomotiva
 
 				else:
-					print(instante)
 					b = (caminho[j + 1], caminho[j])
 					while dic_lstMatriz[b][instante] == strLocomotiva:
 						instante += 1
