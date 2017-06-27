@@ -26,33 +26,16 @@ def gerar_matriz_alocacao (lstLinhas, intTempo, intMenorTempo):
 		matriz_alocacao[lstLinhas[i]] = instantes_linha
 	return matriz_alocacao
 
-# def checarCaminho(nwxGrafo, dic_lstMatriz, lstCaminho, strLocomotiva, intTempo, intDelta_tempo):
-	# result = True
-	# instante = int(intTempo//intDelta_tempo)
-	# j = 0
-	# while j < (len(lstCaminho) - 1):
-		
-		# x = 0
-		# custo_linha = nwxGrafo[lstCaminho[j]][lstCaminho[j + 1]]["weight"]
-		
-		# while x < (custo_linha/intDelta_tempo):
-			# while int(intTempo//intDelta_tempo) == instante:
-				# instante += 1
-				# print("@#$%")
-			# instante = int(intTempo//intDelta_tempo)
-			
-			# if (lstCaminho[j], lstCaminho[j + 1]) in dic_lstMatriz:
-				# a = (lstCaminho[j], lstCaminho[j + 1])
-				# result = result and (dic_lstMatriz[a][instante] == strLocomotiva or dic_lstMatriz[a][instante])
-			# else:
-				# b = (lstCaminho[j + 1], lstCaminho[j])
-				# result = result and (dic_lstMatriz[b][instante] == strLocomotiva or dic_lstMatriz[b][instante])
-			
-			# intTempo = intTempo + intDelta_tempo
-			# x += 1
-		# j += 1
-	# return result
-
+def checarLinha (nwxGrafo, tupLinha, dic_lstMatriz, intTempoAtual, intdelta_tempo):
+	result = True
+	i = 0
+	instante_atual = intTempoAtual//intdelta_tempo
+	custo = nwxGrafo[tupLinha[0]][tupLinha[1]]
+	while x < (custo/intdelta_tempo):
+		if dic_lstMatriz[tupLinha][instante_atual+x] != "0":
+			result = result and False
+		x += 1
+	return result
 def preencher_matriz_aloc(nwxGrafo, dic_lstMatriz, strLocomotiva, lst_tupTrajeto, intDelta_tempo):
 	from math import floor
 	i = 0

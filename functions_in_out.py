@@ -36,4 +36,11 @@ def imprime_matriz_arquivo(nwxGrafo, matriz, arquivo):
 			a.write(matriz[chaves[i]][j]+"\t")
 		a.write("\n")
 	a.close()
+
+def imprime_trajeto_arquivo(trajeto , nomeArquivo):
+	a = open(nomeArquivo, "w")
+	a.write(trajeto[0][0]+"\t"+trajeto[0][1]+"\t")
+	for i in range (1,len(trajeto)):
+		a.write(trajeto[i][0]+"\t"+trajeto[i][1]+"\t")
+
 """ entrada e saída de dados"""

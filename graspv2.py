@@ -7,7 +7,7 @@
 
 import networkx as nwx
 from functions2 import *
-from functions_in_out import imprime_matriz_arquivo
+from functions_in_out import (imprime_matriz_arquivo,imprime_trajeto_arquivo)
 
 def gerar_RCL(grafo, manobras, linha_atual):
 	dic_custos = {}
@@ -96,6 +96,7 @@ def construir_solucao(grafo, lst_manobras, lst_tupLocomotivas, dic_lstMatriz, te
 		preencher_matriz_aloc(grafo, dic_lstMatriz, strLocomotiva, trajeto, intDelta_tempo)
 		#escrevendo a matriz em um arquivo
 		imprime_matriz_arquivo(grafo, dic_lstMatriz, "./mat"+strSol+str(p))
+		imprime_trajeto_arquivo(trajeto, strLocomotiva+strSol)
 
 	return [trajeto, avaliar_custo_c_dijkstra(grafo, trajeto)]
 

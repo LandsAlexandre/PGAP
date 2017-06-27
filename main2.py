@@ -42,8 +42,8 @@ def main():
 	
 	del(Enlaces)
 	
-	horizonteTempo = 200
-	menorTempoAresta = 6
+	horizonteTempo = 20
+	menorTempoAresta = 1
 	
 	Matriz = gerar_matriz_alocacao(list(layoutPatio.edges()), horizonteTempo, menorTempoAresta)
 	ini = time()
