@@ -53,56 +53,81 @@ def preencher_matriz_aloc(nwxGrafo, dic_lstMatriz, strLocomotiva, lst_tupTrajeto
 	from math import floor
 	i = 0
 	tempo = 0
+	instante = 0
 	while i < (len(lst_tupTrajeto) - 1):
 
 		"""Origem da Locomotiva'"""
-		instante = 0
 		x = 0
+		""" custo da linha de origem """
 		custo_linha = nwxGrafo[lst_tupTrajeto[i][0]][lst_tupTrajeto[i][1]]["weight"]
 		while x < (custo_linha/intDelta_tempo):
-			instante = int(floor(tempo//intDelta_tempo))
+			"""" calculando o intervalo de tempo """
+			instante = int(floor(tempo//intDelta_tempo) + x)
+
 			if lst_tupTrajeto[i] in dic_lstMatriz:
-				while dic_lstMatriz[lst_tupTrajeto[i]][instante] == strLocomotiva:
-					instante += 1
-				if checarLinha(nwxGrafo, lst_tupTrajeto[i], dic_lstMatriz, tempo, intDelta_tempo):
-					dic_lstMatriz[lst_tupTrajeto[i]][instante] = strLocomotiva
-			else:
-				a = (lst_tupTrajeto[i][1], lst_tupTrajeto[i][0])
-				while dic_lstMatriz[a][instante] == strLocomotiva:
-					instante += 1
+				a = lst_tupTrajeto[i]
 				if checarLinha(nwxGrafo, a, dic_lstMatriz, tempo, intDelta_tempo):
+					""" alocando na matriz """
 					dic_lstMatriz[a][instante] = strLocomotiva
+				else:
+					raise ExceptionLinhaOcupada
+			else:
+				b = (lst_tupTrajeto[i][1], lst_tupTrajeto[i][0])
+				if checarLinha(nwxGrafo, b, dic_lstMatriz, tempo, intDelta_tempo):
+					""" alocando na matriz """
+					dic_lstMatriz[b][instante] = strLocomotiva
+				else:
+					raise ExceptionLinhaOcupada
 			
-			tempo = tempo + intDelta_tempo
+			tempo += intDelta_tempo
 			x += 1
-		tempo -= intDelta_tempo - custo_linha%intDelta_tempo
+		""" acertando valor de tempo """
+		if custo_linha > intDelta_tempo and custo_linha % intDelta_tempo != 0:
+			tempo -= (intDelta_tempo*x - custo_linha)
+		elif custo_linha < intDelta_tempo:
+			tempo -= (intDelta_tempo - custo_linha)
+
 		"""Origem da Locomotiva'"""
 
 		""" define qual caminho tomar (yen ou 'dijkstra e esperar'?) """
 		caminho = nwx.dijkstra_path(nwxGrafo, lst_tupTrajeto[i][1], lst_tupTrajeto[i + 1][0])
+		caminho = delLinhaRepedtida(lst_tupTrajeto[0], caminho)
 		""" define qual caminho tomar (yen ou 'dijkstra e esperar'?) """
 
 		j = 0
 		while j < (len(caminho) - 1):
-			instante = 0
+			#instante = 0
 			x = 0
+			"""" calculando custo da linha """
 			custo_linha = nwxGrafo[caminho[j]][caminho[j + 1]]["weight"]
+
+			""" enquanto x for menor que a relação entre o custo da linha e o delta_tempo """
 			while x < (custo_linha/intDelta_tempo):
-				instante = int(floor(tempo//intDelta_tempo))
+				""" calculando o intervalo de tempo """
+				if int(floor(tempo//intDelta_tempo) + x) == instante:
+					instante+=1
+
+				else: instante = int(floor(tempo//intDelta_tempo) + x)
+
 				if (caminho[j], caminho[j + 1]) in dic_lstMatriz:
 					a = (caminho[j], caminho[j + 1])
-					while dic_lstMatriz[a][instante] == strLocomotiva:
-						instante += 1
-					dic_lstMatriz[a][instante] = strLocomotiva
+					if checarLinha(nwxGrafo, a, dic_lstMatriz, tempo, intDelta_tempo):
+						dic_lstMatriz[a][instante] = strLocomotiva
+					else:
+						raise ExceptionLinhaOcupada
 				else:
 					b = (caminho[j + 1], caminho[j])
-					while dic_lstMatriz[b][instante] == strLocomotiva:
-						instante += 1
-					dic_lstMatriz[b][instante] = strLocomotiva
+					if checarLinha(nwxGrafo, b, dic_lstMatriz, tempo, intDelta_tempo):
+						dic_lstMatriz[b][instante] = strLocomotiva
+					else:
+						raise ExceptionLinhaOcupada
 				tempo = tempo + intDelta_tempo
 				x += 1
-
-			tempo -= intDelta_tempo - custo_linha % intDelta_tempo
+			""" acertando valor de tempo """
+			if custo_linha > intDelta_tempo and custo_linha % intDelta_tempo != 0:
+				tempo -= (intDelta_tempo * x - custo_linha)
+			elif custo_linha < intDelta_tempo:
+				tempo -= (intDelta_tempo - custo_linha)
 			j += 1
 
 		i += 1
@@ -111,21 +136,32 @@ def preencher_matriz_aloc(nwxGrafo, dic_lstMatriz, strLocomotiva, lst_tupTrajeto
 	custo_linha = nwxGrafo[lst_tupTrajeto[i][0]][lst_tupTrajeto[i][1]]["weight"]
 
 	while x < (custo_linha/intDelta_tempo):
-		instante = int(floor(tempo//intDelta_tempo))
+		""" calculando o intervalo de tempo """
+		if int(floor(tempo//intDelta_tempo) + x) == instante:
+			instante+= 1
+
+		else: instante = int(floor(tempo//intDelta_tempo) + x)
 
 		if lst_tupTrajeto[i] in dic_lstMatriz:
-			while dic_lstMatriz[lst_tupTrajeto[i]][instante] == strLocomotiva:
-				instante += 1
-			dic_lstMatriz[lst_tupTrajeto[i]][instante] = strLocomotiva
+			a = lst_tupTrajeto[i]
+			if checarLinha(nwxGrafo, a, dic_lstMatriz, tempo, intDelta_tempo):
+				dic_lstMatriz[a][instante] = strLocomotiva
+			else:
+				raise ExceptionLinhaOcupada
 		else:
-			a = (lst_tupTrajeto[i][1], lst_tupTrajeto[i][0])
-			while dic_lstMatriz[a][instante] == strLocomotiva:
-				instante += 1
-			dic_lstMatriz[a][instante] = strLocomotiva
+			b = (lst_tupTrajeto[i][1], lst_tupTrajeto[i][0])
+			if checarLinha(nwxGrafo, b, dic_lstMatriz, tempo, intDelta_tempo):
+				dic_lstMatriz[b][instante] = strLocomotiva
+			else:
+				raise ExceptionLinhaOcupada
 
-		tempo = tempo + intDelta_tempo
+		tempo += intDelta_tempo
 		x += 1
-	tempo -= intDelta_tempo - custo_linha%intDelta_tempo
+	""" acertando valor de tempo """
+	if custo_linha > intDelta_tempo and custo_linha % intDelta_tempo != 0:
+		tempo -= (intDelta_tempo * x - custo_linha)
+	elif custo_linha < intDelta_tempo:
+		tempo -= (intDelta_tempo - custo_linha)
 
 	return dic_lstMatriz
 

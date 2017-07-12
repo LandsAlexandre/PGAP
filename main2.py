@@ -52,8 +52,8 @@ def main():
 
 	m_solucao = solucao[:]
 	
-	i = 2
-	while time() - ini < 0.1:
+	i = 1
+	while i <= 2:
 		Matriz = gerar_matriz_alocacao(list(layoutPatio.edges()), horizonteTempo, menorTempoAresta)
 		solucao = construir_solucao(layoutPatio, Manobras, OrigemLoc, Matriz, horizonteTempo, menorTempoAresta, str(i))
 		
