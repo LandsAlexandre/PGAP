@@ -90,7 +90,7 @@ def construir_solucao(grafo, lst_manobras, lst_tupLocomotivas, dic_lstMatriz, te
 			del(trajeto[len(trajeto) - 1])	
 		
 		#atualizando localização da locomotiva
-		lst_tupLocomotivas[p] = (lst_tupLocomotivas[p][0], trajeto[-1])
+		#lst_tupLocomotivas[p] = (lst_tupLocomotivas[p][0], trajeto[-1])
 		busca_local(grafo, trajeto)
 		#preenchendo a matriz com trajeto escolhido
 		preencher_matriz_aloc(grafo, dic_lstMatriz, strLocomotiva, trajeto, intDelta_tempo)
