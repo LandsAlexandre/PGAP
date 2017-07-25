@@ -40,6 +40,30 @@ def checarLinha (nwxGrafo, tupLinha, dic_lstMatriz, intTempoAtual, intdelta_temp
 			result = result and False
 		x += 1
 	return result
+def checarLinhaPorInstante (matriz, linha, instanteInicio, instanteFim,):
+	# matriz ->  {("Ni","Nj"):[0,1,2,3,...],...}
+	# linha -> ("Ni","Nj")
+	# instanteInicio/instanteFim -> inteiro
+
+	result = True
+	if linha not in matriz.key():
+		linha = (linha[1],linha(0))
+	i = instanteInicio
+	while i <= instanteFim and result:
+		if matriz[linha][i] != 0:
+			result = result and False
+	return result
+
+def alocarLinha (matriz, linha, locomotiva, instanteInicio, instanteFim):
+	# matriz ->  {("Ni","Nj"):[0,1,2,3,...],...}
+	# linha -> ("Ni","Nj")
+	# locomotiva -> "LMx"
+	# instanteInicio/instanteFim -> inteiro
+
+	if linha not in matriz.key():
+		linha = (linha[1],linha(0))
+	for i in range (instanteInicio, instanteFim + 1, 1):
+		matriz[linha][i] = locomotiva
 def delLinhaRepedtida(tupLinha, caminho):
 	tupPrimeiraLinhaCaminho = tuple(caminho[0:2])
 	if tupLinha == tupPrimeiraLinhaCaminho or (tupLinha[1], tupLinha[0]) == tupPrimeiraLinhaCaminho:
@@ -67,14 +91,14 @@ def preencher_matriz_aloc(nwxGrafo, dic_lstMatriz, strLocomotiva, lst_tupTrajeto
 			if lst_tupTrajeto[i] in dic_lstMatriz:
 				a = lst_tupTrajeto[i]
 				if checarLinha(nwxGrafo, a, dic_lstMatriz, tempo, intDelta_tempo):
-					""" alocando na matriz """
+					# alocar linha #
 					dic_lstMatriz[a][instante] = strLocomotiva
 				else:
 					raise ExceptionLinhaOcupada
 			else:
 				b = (lst_tupTrajeto[i][1], lst_tupTrajeto[i][0])
 				if checarLinha(nwxGrafo, b, dic_lstMatriz, tempo, intDelta_tempo):
-					""" alocando na matriz """
+					# alocar linha #
 					dic_lstMatriz[b][instante] = strLocomotiva
 				else:
 					raise ExceptionLinhaOcupada
@@ -112,12 +136,14 @@ def preencher_matriz_aloc(nwxGrafo, dic_lstMatriz, strLocomotiva, lst_tupTrajeto
 				if (caminho[j], caminho[j + 1]) in dic_lstMatriz:
 					a = (caminho[j], caminho[j + 1])
 					if checarLinha(nwxGrafo, a, dic_lstMatriz, tempo, intDelta_tempo):
+						# alocar linha #
 						dic_lstMatriz[a][instante] = strLocomotiva
 					else:
 						raise ExceptionLinhaOcupada
 				else:
 					b = (caminho[j + 1], caminho[j])
 					if checarLinha(nwxGrafo, b, dic_lstMatriz, tempo, intDelta_tempo):
+						# alocar linha #
 						dic_lstMatriz[b][instante] = strLocomotiva
 					else:
 						raise ExceptionLinhaOcupada
@@ -145,12 +171,14 @@ def preencher_matriz_aloc(nwxGrafo, dic_lstMatriz, strLocomotiva, lst_tupTrajeto
 		if lst_tupTrajeto[i] in dic_lstMatriz:
 			a = lst_tupTrajeto[i]
 			if checarLinha(nwxGrafo, a, dic_lstMatriz, tempo, intDelta_tempo):
+				# alocar linha #
 				dic_lstMatriz[a][instante] = strLocomotiva
 			else:
 				raise ExceptionLinhaOcupada
 		else:
 			b = (lst_tupTrajeto[i][1], lst_tupTrajeto[i][0])
 			if checarLinha(nwxGrafo, b, dic_lstMatriz, tempo, intDelta_tempo):
+				# alocar linha #
 				dic_lstMatriz[b][instante] = strLocomotiva
 			else:
 				raise ExceptionLinhaOcupada
