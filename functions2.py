@@ -32,6 +32,8 @@ def gerar_matriz_alocacao (lstLinhas, intTempo, intMenorTempo):
 	return matriz_alocacao
 
 def checarLinha (nwxGrafo, tupLinha, dic_lstMatriz, intTempoAtual, intdelta_tempo):
+	# retorna False se a linha
+	# estiver ocupada e True caso contrario
 	result = True
 	i = 0
 	instante_atual = intTempoAtual//intdelta_tempo
@@ -50,11 +52,12 @@ def checarLinhaPorInstante (matriz, linha, instanteInicio, instanteFim,):
 
 	result = True
 	if linha not in matriz.keys():
-		linha = (linha[1],linha(0))
+		linha = (linha[1],linha[0])
 	i = instanteInicio
-	while i <= instanteFim and result:
-		if matriz[linha][i] != 0:
+	while i < instanteFim and result:
+		if matriz[linha][i] != "0":
 			result = result and False
+		i += 1
 	return result
 
 def alocarLinha (matriz, linha, locomotiva, instanteInicio, instanteFim):
@@ -114,14 +117,17 @@ def preencher_matriz_aloc(nwxGrafo, dic_lstMatriz, strLocomotiva, lst_tupTrajeto
 		elif custo_linha < intDelta_tempo:
 			tempo -= (intDelta_tempo - custo_linha)
 		instanteFim = int(ceil(tempo//intDelta_tempo))
-		alocarLinha(dic_lstMatriz, lst_tupTrajeto[i], strLocomotiva, instanteIni, instanteFim)
+
+		if checarLinhaPorInstante(dic_lstMatriz, lst_tupTrajeto[i], instanteIni, instanteFim):
+			alocarLinha(dic_lstMatriz, lst_tupTrajeto[i], strLocomotiva, instanteIni, instanteFim)
+		else:
+			raise ExceptionLinhaOcupada
 		"""Origem da Locomotiva'"""
 
 		""" define qual caminho tomar (yen ou 'dijkstra e esperar'?) """
 		caminho = nwx.dijkstra_path(nwxGrafo, lst_tupTrajeto[i][1], lst_tupTrajeto[i + 1][0])
 		caminho = delLinhaRepedtida(lst_tupTrajeto[0], caminho)
 		""" define qual caminho tomar (yen ou 'dijkstra e esperar'?) """
-
 		j = 0
 		while j < (len(caminho) - 1):
 			#instante = 0
