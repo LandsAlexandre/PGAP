@@ -60,6 +60,7 @@ def main():
 		i += 1
 		# if solucao[1] < m_solucao[1]:
 		# 	m_solucao = solucao[:]
+	print("Tarefa concluída")
 	return 0
 
 if __name__ == '__main__':
