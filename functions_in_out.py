@@ -31,7 +31,7 @@ def imprime_matriz_arquivo(nwxGrafo, matriz, arquivo):
 	chaves = list(matriz.keys())
 	chaves = sorted(chaves)
 	for i in range (len(chaves)):
-		a.write(nwxGrafo[chaves[i][0]][chaves[i][1]]["name"]+"\t")
+		a.write(nwxGrafo[chaves[i][0]][chaves[i][1]]["id"]+"\t")
 		for j in range (len(matriz[chaves[i]])):
 			a.write(matriz[chaves[i]][j]+"\t")
 		a.write("\n")

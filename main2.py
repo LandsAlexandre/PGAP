@@ -12,6 +12,7 @@ from functions2 import *
 from graspv2 import *
 from os import mkdir, chdir, path
 from time import time
+from networkx import read_graphml
 
 def main():
 
@@ -19,39 +20,42 @@ def main():
 	chdir(sys.path[0])
 	if not path.exists("./Saídas"):
 		mkdir("Saídas")
-	Enlaces = abrir_arquivo("./Entradas/enlaces")
+	# Enlaces = abrir_arquivo("./Entradas/enlaces")
 	OrigemLoc = abrir_arquivo("./Entradas/locomotivas")
 	Manobras = abrir_arquivo("./Entradas/manobras")
 	
 	chdir("./Saídas")	
 
 	""" criando grafo """
-	layoutPatio = nwx.Graph()
-	for elem in Enlaces:
-		layoutPatio.add_edge(elem[1], elem[2], weight = int(elem[3]), name = elem[0])
+	# layoutPatio = nwx.Graph()
+	# for elem in Enlaces:
+	# 	layoutPatio.add_edge(elem[1], elem[2], weight = int(elem[3]), name = elem[0])
+
+	''' opening graphml... only undirected graph '''
+	layoutPatio = read_graphml("C:/Users/Lantrous/Desktop/IC/uvaranas.graphml")
 
 	for i in range(len(Manobras)):
 		man = Manobras[i]
 		man[1] = pega_par_nos(layoutPatio, man[1])
 		man[2] = pega_par_nos(layoutPatio, man[2])
 		Manobras[i] = man
-	
+
 	for i in range(len(OrigemLoc)):
 		ol = pega_par_nos(layoutPatio, OrigemLoc[i][1])
 		OrigemLoc[i] = (OrigemLoc[i][0], ol)
-	
-	del(Enlaces)
-	
+
+	# del(Enlaces)
+
 	horizonteTempo = 20
 	menorTempoAresta = 1
-	
+
 	Matriz = gerar_matriz_alocacao(list(layoutPatio.edges()), horizonteTempo, menorTempoAresta)
 	ini = time()
 
 	solucao = construir_solucao(layoutPatio, Manobras, OrigemLoc, Matriz, horizonteTempo, menorTempoAresta, "1")
 
 	m_solucao = solucao[:]
-	
+
 	i = 1
 	while i <= 2:
 		Matriz = gerar_matriz_alocacao(list(layoutPatio.edges()), horizonteTempo, menorTempoAresta)

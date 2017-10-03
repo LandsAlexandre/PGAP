@@ -14,7 +14,7 @@ class ExceptionLinhaOcupada(Exception):
 
 def pega_par_nos(grafo, nome_linha):
 	for elem in grafo.edges():
-		if grafo[elem[0]][elem[1]]["name"] == nome_linha:
+		if grafo[elem[0]][elem[1]]["id"] == nome_linha:
 			if int(elem[0][1:]) > int(elem[1][1:]):
 				""" padronizando saida """
 				return (elem[1], elem[0])
@@ -154,7 +154,8 @@ def avaliar_custo_c_dijkstra(grafo, solucao):
 	indice = 1
 	custo = 0
 	while indice < len(solucao):
-		custo += grafo[solucao[indice - 1][0]][solucao[indice - 1][1]]["weight"]
+		edge = grafo[solucao[indice - 1][0]][solucao[indice - 1][1]]
+		custo += edge["weight"]
 		custo += nwx.dijkstra_path_length(grafo, solucao[indice - 1][1], solucao[indice][0])
 		indice += 1
 	custo += grafo[solucao[indice - 1][0]][solucao[indice - 1][1]]["weight"]

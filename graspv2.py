@@ -16,7 +16,8 @@ def gerar_RCL(grafo, manobras, linha_atual):
 	i = 0
 	for elem in manobras:
 		#dic_custos[(x,y)] -> {custo do caminho (inteiro), numero de saltos de X ate Y (inteiro)}
-		dic_custos[tuple(elem[1:])] = (nwx.dijkstra_path_length(grafo,linha_atual[1],elem[1][0]),len(nwx.dijkstra_path(grafo,linha_atual[1],elem[1][0]))-1)
+		dic_custos[tuple(elem[1:])] = (nwx.dijkstra_path_length(grafo,linha_atual[1],elem[1][0]),
+									   len(nwx.dijkstra_path(grafo,linha_atual[1],elem[1][0]))-1)
 
 	i = len(RCL) - 1
 	while i >= 0:
