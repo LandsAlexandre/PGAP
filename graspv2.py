@@ -57,9 +57,9 @@ def gerar_RCL(grafo, manobras, linha_atual):
 			i = ult_seq + 1
 	return RCL
 
-def construir_solucao(grafo, lst_manobras, lst_tupLocomotivas, dic_lstMatriz, tempo, intDelta_tempo, strSol):
+def construir_solucao(grafo, lst_manobras, lst_tupLocomotivas, dic_lstMatriz, tempo, intDelta_tempo, strSol, alpha = 1):
 	from random import choice
-	
+	from math import floor
 	manobras = lst_manobras[:]
 
 	for p in range(len(lst_tupLocomotivas)):
@@ -67,17 +67,19 @@ def construir_solucao(grafo, lst_manobras, lst_tupLocomotivas, dic_lstMatriz, te
 		trajeto = []
 		tempo_gasto = 0
 		res_tempo = tempo_gasto > tempo
-		lst_origem = lst_tupLocomotivas[p][1]
+		tupOrigemLoc = lst_tupLocomotivas[p][1]
 		strLocomotiva = lst_tupLocomotivas[p][0]
 
-		trajeto.append(lst_origem)
+		trajeto.append(tupOrigemLoc)
 
 		while (len(trajeto) != 1 + len(lst_manobras) * 2) and not res_tempo:
 
 			RCL = gerar_RCL(grafo, manobras, trajeto[len(trajeto) - 1])
 			if len(RCL) == 0:
 				break
-			elem_RCL = choice(RCL)
+			limiteRCL = floor(len(RCL)*alpha)
+			if limiteRCL == 0:	limiteRCL = 1
+			elem_RCL = choice(RCL[0:limiteRCL])
 			
 			trajeto.append(elem_RCL[1])
 			trajeto.append(elem_RCL[2])
@@ -89,9 +91,7 @@ def construir_solucao(grafo, lst_manobras, lst_tupLocomotivas, dic_lstMatriz, te
 		if res_tempo:
 			del(trajeto[len(trajeto) - 1])
 			del(trajeto[len(trajeto) - 1])	
-		
-		#atualizando localização da locomotiva
-		#lst_tupLocomotivas[p] = (lst_tupLocomotivas[p][0], trajeto[-1])
+
 		busca_local(grafo, trajeto)
 		#preenchendo a matriz com trajeto escolhido
 		preencher_matriz_aloc(grafo, dic_lstMatriz, strLocomotiva, trajeto, intDelta_tempo)

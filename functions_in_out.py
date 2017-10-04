@@ -10,9 +10,11 @@ def abrir_arquivo(strNomeArq):
 	strVetor = []
 	arq = open(strNomeArq, "r")
 	linha = arq.readline()
-	linha = arq.readline()
 	while linha:
 		linha = linha.replace("\n","")
+		if linha[0]=="#":
+			linha = arq.readline()
+			continue
 		strVetor.append(linha.split(" "))
 		linha = arq.readline()
 	arq.close()
@@ -42,5 +44,4 @@ def imprime_trajeto_arquivo(trajeto , nomeArquivo):
 	a.write(trajeto[0][0]+"\t"+trajeto[0][1]+"\t")
 	for i in range (1,len(trajeto)):
 		a.write(trajeto[i][0]+"\t"+trajeto[i][1]+"\t")
-
 """ entrada e saída de dados"""

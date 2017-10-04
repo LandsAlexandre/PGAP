@@ -10,29 +10,36 @@ import sys
 from  functions_in_out import *
 from functions2 import *
 from graspv2 import *
-from os import mkdir, chdir, path
+from os import mkdir, chdir, path, listdir, remove
 from time import time
 from networkx import read_graphml
 
 def main():
-
-	""" entrada de dados (abrindo arquivos) """
 	chdir(sys.path[0])
 	if not path.exists("./Saídas"):
 		mkdir("Saídas")
-	# Enlaces = abrir_arquivo("./Entradas/enlaces")
-	OrigemLoc = abrir_arquivo("./Entradas/locomotivas")
-	Manobras = abrir_arquivo("./Entradas/manobras")
-	
-	chdir("./Saídas")	
+	chdir("./Saídas")
+	fileList = listdir("./")
+	for file in fileList:
+		remove("./"+file)
+
+	""" entrada de dados (abrindo arquivos) """
+	OrigemLoc = abrir_arquivo("../Entradas/locomotivas")
+	Manobras = abrir_arquivo("../Entradas/manobras")
+	''' opening graphml... only undirected graph '''
+	layoutPatio = read_graphml("../Entradas/uvaranas.graphml")
+
+	maxIterations = 50
+	alpha = 1
+	horizonteTempo = 360
+	menorTempoAresta = 1
+
+	Matriz = gerar_matriz_alocacao(list(layoutPatio.edges()), horizonteTempo, menorTempoAresta)
 
 	""" criando grafo """
 	# layoutPatio = nwx.Graph()
 	# for elem in Enlaces:
 	# 	layoutPatio.add_edge(elem[1], elem[2], weight = int(elem[3]), name = elem[0])
-
-	''' opening graphml... only undirected graph '''
-	layoutPatio = read_graphml("C:/Users/Lantrous/Desktop/IC/uvaranas.graphml")
 
 	for i in range(len(Manobras)):
 		man = Manobras[i]
@@ -44,23 +51,13 @@ def main():
 		ol = pega_par_nos(layoutPatio, OrigemLoc[i][1])
 		OrigemLoc[i] = (OrigemLoc[i][0], ol)
 
-	# del(Enlaces)
-
-	horizonteTempo = 20
-	menorTempoAresta = 1
-
-	Matriz = gerar_matriz_alocacao(list(layoutPatio.edges()), horizonteTempo, menorTempoAresta)
-	ini = time()
-
-	solucao = construir_solucao(layoutPatio, Manobras, OrigemLoc, Matriz, horizonteTempo, menorTempoAresta, "1")
-
+	solucao = construir_solucao(layoutPatio, Manobras, OrigemLoc, Matriz, horizonteTempo, menorTempoAresta, "1", alpha)
 	m_solucao = solucao[:]
 
 	i = 1
-	while i <= 2:
+	while i < maxIterations:
 		Matriz = gerar_matriz_alocacao(list(layoutPatio.edges()), horizonteTempo, menorTempoAresta)
-		solucao = construir_solucao(layoutPatio, Manobras, OrigemLoc, Matriz, horizonteTempo, menorTempoAresta, str(i))
-		
+		solucao = construir_solucao(layoutPatio, Manobras, OrigemLoc, Matriz, horizonteTempo, menorTempoAresta, str(i), alpha)
 		i += 1
 		# if solucao[1] < m_solucao[1]:
 		# 	m_solucao = solucao[:]
