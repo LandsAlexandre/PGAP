@@ -44,4 +44,15 @@ def imprime_trajeto_arquivo(trajeto , nomeArquivo):
 	a.write(trajeto[0][0]+"\t"+trajeto[0][1]+"\t")
 	for i in range (1,len(trajeto)):
 		a.write(trajeto[i][0]+"\t"+trajeto[i][1]+"\t")
+
+def imprime_dic_arquivo(dic, arquivo):
+	a = open(arquivo, "w")
+	chaves = list(dic.keys())
+	chaves = sorted(chaves)
+	for i in range (len(chaves)):
+		a.write(str(chaves[i])+"\t")
+		for j in range (len(dic[chaves[i]])):
+			a.write(str(dic[chaves[i]][j])+"\t")
+		a.write("\n")
+	a.close()
 """ entrada e saída de dados"""

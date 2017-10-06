@@ -11,7 +11,6 @@ from  functions_in_out import *
 from functions2 import *
 from graspv2 import *
 from os import mkdir, chdir, path, listdir, remove
-from time import time
 from networkx import read_graphml
 
 def main():
@@ -29,38 +28,47 @@ def main():
 	''' opening graphml... only undirected graph '''
 	layoutPatio = read_graphml("../Entradas/uvaranas.graphml")
 
-	maxIterations = 50
-	alpha = 1
+	maxIterationParameter = [50, 100, 200, 500]
+	alphaParameter = [0.1, 0.2, 0.4, 0.8, 1]
 	horizonteTempo = 360
 	menorTempoAresta = 1
 
-	Matriz = gerar_matriz_alocacao(list(layoutPatio.edges()), horizonteTempo, menorTempoAresta)
-
-	""" criando grafo """
-	# layoutPatio = nwx.Graph()
-	# for elem in Enlaces:
-	# 	layoutPatio.add_edge(elem[1], elem[2], weight = int(elem[3]), name = elem[0])
 
 	for i in range(len(Manobras)):
 		man = Manobras[i]
 		man[1] = pega_par_nos(layoutPatio, man[1])
 		man[2] = pega_par_nos(layoutPatio, man[2])
 		Manobras[i] = man
-
+	nomeLocomotivas = []
 	for i in range(len(OrigemLoc)):
 		ol = pega_par_nos(layoutPatio, OrigemLoc[i][1])
 		OrigemLoc[i] = (OrigemLoc[i][0], ol)
+		nomeLocomotivas.append(OrigemLoc[i][0])
+	results = {}
+	for maxI in maxIterationParameter:
+		for alpha in alphaParameter:
+			Matriz = gerar_matriz_alocacao(list(layoutPatio.edges()), horizonteTempo, menorTempoAresta)
+			for j in range(10):
+				construir_solucao(layoutPatio, Manobras, OrigemLoc, Matriz, horizonteTempo, menorTempoAresta, "1", alpha)
+				melhorSolucao = Matriz.copy()
+				melhorTempoMaior, melhorTempoMenor, melhorTempoMaior = avaliadorSolucao(melhorSolucao, nomeLocomotivas)
+				aux = melhorTempoMaior
 
-	solucao = construir_solucao(layoutPatio, Manobras, OrigemLoc, Matriz, horizonteTempo, menorTempoAresta, "1", alpha)
-	m_solucao = solucao[:]
+				i = 1
+				while i < maxI:
+					Matriz = gerar_matriz_alocacao(list(layoutPatio.edges()), horizonteTempo, menorTempoAresta)
+					construir_solucao(layoutPatio, Manobras, OrigemLoc, Matriz, horizonteTempo, menorTempoAresta, str(i), alpha)
+					tempoMedio, tempoMenor, tempoMaior = avaliadorSolucao(Matriz, nomeLocomotivas)
 
-	i = 1
-	while i < maxIterations:
-		Matriz = gerar_matriz_alocacao(list(layoutPatio.edges()), horizonteTempo, menorTempoAresta)
-		solucao = construir_solucao(layoutPatio, Manobras, OrigemLoc, Matriz, horizonteTempo, menorTempoAresta, str(i), alpha)
-		i += 1
-		# if solucao[1] < m_solucao[1]:
-		# 	m_solucao = solucao[:]
+					if tempoMaior < melhorTempoMaior:
+						melhorSolucao = Matriz.copy()
+						melhorTempoMaior = tempoMaior
+					i += 1
+				if (maxI,alpha) in results:
+					results[(maxI,alpha)].append((aux, melhorTempoMaior))
+				else:
+					results[(maxI,alpha)] = [(aux, melhorTempoMaior)]
+	imprime_dic_arquivo(results, "./results")
 	print("Tarefa concluída")
 	return 0
 

@@ -96,8 +96,8 @@ def construir_solucao(grafo, lst_manobras, lst_tupLocomotivas, dic_lstMatriz, te
 		#preenchendo a matriz com trajeto escolhido
 		preencher_matriz_aloc(grafo, dic_lstMatriz, strLocomotiva, trajeto, intDelta_tempo)
 		#escrevendo a matriz em um arquivo
-		imprime_matriz_arquivo(grafo, dic_lstMatriz, "./mat"+strSol+str(p))
-		imprime_trajeto_arquivo(trajeto, strLocomotiva+strSol)
+		# imprime_matriz_arquivo(grafo, dic_lstMatriz, "./mat"+strSol+str(p))
+		# imprime_trajeto_arquivo(trajeto, strLocomotiva+strSol)
 
 	return [trajeto, avaliar_custo_c_dijkstra(grafo, trajeto)]
 
@@ -129,3 +129,19 @@ def busca_local (grafo, solucao):
 		
 	
 	return melhor_solucao
+
+def avaliadorSolucao(matrizAlocacao, nomeLocomotivas):
+	tempoLocomotivas = {}
+	chaves = matrizAlocacao.keys()
+	for loc in nomeLocomotivas:
+		for chave in chaves:
+			if loc in matrizAlocacao[chave]:
+				if loc in tempoLocomotivas:	tempoLocomotivas[loc] += matrizAlocacao[chave].count(loc)
+				else:	tempoLocomotivas[loc] = matrizAlocacao[chave].count(loc)
+			else:	continue
+	tempoLocomotivasValues = tempoLocomotivas.values()
+	tempoMedioTrabalhoLocomotivas = sum(tempoLocomotivasValues)/len(tempoLocomotivasValues) # tempo médio de trabalho das locomotivas
+	tempoLocomotivaTrabalhadora = max(tempoLocomotivasValues) # tempo da locomotiva que terminou as manobras por ultimo
+	tempoLocomotivaPreguicosa = min(tempoLocomotivasValues) # tempo da locomotiva que terminou as manobras primeiro
+	return (tempoMedioTrabalhoLocomotivas, tempoLocomotivaPreguicosa,
+			tempoLocomotivaTrabalhadora)
