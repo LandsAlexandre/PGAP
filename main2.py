@@ -29,7 +29,7 @@ def main():
 	layoutPatio = read_graphml("../Entradas/uvaranas.graphml")
 
 	maxIterationParameter = [50, 100, 200, 500]
-	alphaParameter = [0.1, 0.2, 0.4, 0.8, 1]
+	alphaParameter = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
 	horizonteTempo = 360
 	menorTempoAresta = 1
 
@@ -47,8 +47,8 @@ def main():
 	results = {}
 	for maxI in maxIterationParameter:
 		for alpha in alphaParameter:
-			Matriz = gerar_matriz_alocacao(list(layoutPatio.edges()), horizonteTempo, menorTempoAresta)
-			for j in range(10):
+			for j in range(1000):
+				Matriz = gerar_matriz_alocacao(list(layoutPatio.edges()), horizonteTempo, menorTempoAresta)
 				construir_solucao(layoutPatio, Manobras, OrigemLoc, Matriz, horizonteTempo, menorTempoAresta, "1", alpha)
 				melhorSolucao = Matriz.copy()
 				melhorTempoMaior, melhorTempoMenor, melhorTempoMaior = avaliadorSolucao(melhorSolucao, nomeLocomotivas)
@@ -68,7 +68,8 @@ def main():
 					results[(maxI,alpha)].append((aux, melhorTempoMaior))
 				else:
 					results[(maxI,alpha)] = [(aux, melhorTempoMaior)]
-	imprime_dic_arquivo(results, "./results")
+				print("m", maxI, "a", alpha, "nRes", j + 1)
+	imprime_dic_arquivo(results, "./results5")
 	print("Tarefa concluída")
 	return 0
 
