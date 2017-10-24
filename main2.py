@@ -12,8 +12,11 @@ from functions2 import *
 from graspv2 import *
 from os import mkdir, chdir, path, listdir, remove
 from networkx import read_graphml
-
+from time import localtime
 def main():
+
+	time = localtime()
+	print("Started at:", str(time[3])+":"+str(time[4])+":"+str(time[5]),str(time[1])+"/"+str(time[2])+"/"+str(time[0]))
 	chdir(sys.path[0])
 	if not path.exists("./Saídas"):
 		mkdir("Saídas")
@@ -28,7 +31,7 @@ def main():
 	''' opening graphml... only undirected graph '''
 	layoutPatio = read_graphml("../Entradas/uvaranas.graphml")
 
-	maxIterationParameter = [50, 100, 200, 500]
+	maxIterationParameter = [5, 10, 15, 20, 30, 40, 50, 100, 200, 500]
 	alphaParameter = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
 	horizonteTempo = 360
 	menorTempoAresta = 1
@@ -47,7 +50,7 @@ def main():
 	results = {}
 	for maxI in maxIterationParameter:
 		for alpha in alphaParameter:
-			for j in range(1000):
+			for j in range(100):
 				Matriz = gerar_matriz_alocacao(list(layoutPatio.edges()), horizonteTempo, menorTempoAresta)
 				construir_solucao(layoutPatio, Manobras, OrigemLoc, Matriz, horizonteTempo, menorTempoAresta, "1", alpha)
 				melhorSolucao = Matriz.copy()
@@ -70,7 +73,9 @@ def main():
 					results[(maxI,alpha)] = [(aux, melhorTempoMaior)]
 				print("m", maxI, "a", alpha, "nRes", j + 1)
 	imprime_dic_arquivo(results, "./results5")
-	print("Tarefa concluída")
+
+	time = localtime()
+	print("Finished at:", str(time[3])+":"+str(time[4])+":"+str(time[5]),str(time[1])+"/"+str(time[2])+"/"+str(time[0]))
 	return 0
 
 if __name__ == '__main__':
